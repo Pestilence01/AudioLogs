@@ -22,12 +22,12 @@ import java.util.Set;
 @RestController
 public class AudioNotesController {
 
-    @Autowired(required = true)
+    @Autowired
     private AuthenticationManager authenticationManager;
 
 
     @Autowired
-    private IAudioBackendService timeSheetService;
+    private IAudioBackendService audioNotesService;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -44,13 +44,17 @@ public class AudioNotesController {
         for (ConstraintViolation<User> violation : violations) {
             body.put(violation.getPropertyPath().toString(), violation.getMessage());
         }
+        factory.close();
         if (!body.isEmpty()) {
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
         }
-        // TODO check if user exists
 
-        timeSheetService.registerUser(user);
-        return new ResponseEntity<Object>(user, HttpStatus.OK);
+        if(!audioNotesService.checkUsernameUnique(user)){
+            return new ResponseEntity<>(user, HttpStatus.CONFLICT);
+        }
+
+        audioNotesService.registerUser(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 
@@ -60,7 +64,7 @@ public class AudioNotesController {
 
         authenticate(user.getUsername(), user.getPassword());
 
-        UserDetails userDetails = timeSheetService.loadUserByUsername(user.getUsername());
+        UserDetails userDetails = audioNotesService.loadUserByUsername(user.getUsername());
         final String token = jwtUtils.generateToken(userDetails);
 
         return ResponseEntity.ok(new JwtResponse(token));

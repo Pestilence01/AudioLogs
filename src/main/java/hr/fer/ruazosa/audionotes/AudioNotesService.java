@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AudioNotesService implements IAudioBackendService {
@@ -16,14 +17,15 @@ public class AudioNotesService implements IAudioBackendService {
 
     @Override
     public User registerUser(User user) {
-        // TODO check username unique
+        if(!checkUsernameUnique(user)){
+            return null;
+        }
         return userRepository.save(user);
     }
 
     @Override
     public boolean checkUsernameUnique(User user) {
-        // TODO implement
-        return false;
+        return Objects.isNull(loadUserByUsername(user.getUsername()));
     }
 
 
@@ -40,4 +42,6 @@ public class AudioNotesService implements IAudioBackendService {
                 new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
         return userDetails;
     }
+
+    //TODO add store and retrieve functionality for audio logs i.e., BLOBS
 }
