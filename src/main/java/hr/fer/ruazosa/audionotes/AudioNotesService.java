@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class AudioNotesService implements IAudioBackendService {
@@ -29,7 +32,6 @@ public class AudioNotesService implements IAudioBackendService {
     }
 
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<User> users = userRepository.findUserByUserName(username);
@@ -43,5 +45,31 @@ public class AudioNotesService implements IAudioBackendService {
         return userDetails;
     }
 
-    //TODO add store and retrieve functionality for audio logs i.e., BLOBS
+    @Override
+    public List<String> savedRecordings(String username) {
+        List<User> users = userRepository.findUserByUserName(username);
+
+        if (users.isEmpty()) {
+            return null;
+        }
+        User user = users.get(0);
+
+        return user.getNotes().stream().map(AudioNotes::getName).collect(Collectors.toList());
+    }
+
+    @Override
+    public void addRecording(String username, Path storedLocation, MultipartFile file) {
+        List<User> users = userRepository.findUserByUserName(username);
+        User user = users.get(0);
+
+        AudioNotes note = new AudioNotes();
+        note.setPath(storedLocation.toString());
+        note.setName(file.getName());
+        note.setDescription(file.getResource().getDescription());
+        user.addAudioNote(note);
+    }
+
+
+
+    //TODO add remove functionality
 }

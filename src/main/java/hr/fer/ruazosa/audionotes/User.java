@@ -3,6 +3,7 @@ package hr.fer.ruazosa.audionotes;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -73,4 +74,16 @@ public class User {
     public String getPassword() {
         return password;
     }
+
+    @OneToMany
+    private List<AudioNotes> notes;
+
+    public List<AudioNotes> getNotes() {
+        return notes;
+    }
+
+    public void addAudioNote(AudioNotes note){
+        notes.add(note);
+    }
+
 }
