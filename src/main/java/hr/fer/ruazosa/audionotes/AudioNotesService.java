@@ -17,6 +17,8 @@ public class AudioNotesService implements IAudioBackendService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AudioNotesRepository audioNotesRepository;
 
     @Override
     public User registerUser(User user) {
@@ -69,7 +71,12 @@ public class AudioNotesService implements IAudioBackendService {
         user.addAudioNote(note);
     }
 
+    @Override
+    public void removeRecording(String username, String storedLocation) {
+        List<User> users = userRepository.findUserByUserName(username);
+        User user = users.get(0);
 
-
-    //TODO add remove functionality
+        List<AudioNotes> notes = user.getNotes();
+        notes.removeIf(note -> note.getPath().equals(storedLocation));
+    }
 }

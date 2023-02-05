@@ -15,4 +15,6 @@ public interface IAudioBackendService extends UserDetailsService {
 
     void addRecording(String username, Path storedLocation, MultipartFile file);
 
+    void removeRecording(String username, String storedLocation);
+
 }

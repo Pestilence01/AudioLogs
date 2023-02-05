@@ -127,6 +127,15 @@ public class AudioNotesController {
         return "redirect:/";
     }
 
+    @DeleteMapping("/files/{filename:.+}")
+    public ResponseEntity<Object> removeNote(@PathVariable String filename){
+        String username = jwtUtils.getUsernameFromToken(getBearerTokenHeader());
+
+        storageService.delete(filename);
+        audioNotesService.removeRecording(username, filename);
+        return ResponseEntity.ok("deleted file " + filename);
+    }
+
 
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
