@@ -1,6 +1,8 @@
 package hr.fer.ruazosa.audionotes;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,7 @@ public class AudioNotesService implements IAudioBackendService {
     }
 
     @Override
-    public List<String> savedRecordings(String username) {
+    public List<AudioNotes> savedRecordings(String username) {
         List<User> users = userRepository.findUserByUserName(username);
 
         if (users.isEmpty()) {
@@ -56,7 +58,7 @@ public class AudioNotesService implements IAudioBackendService {
         }
         User user = users.get(0);
 
-        return user.getNotes().stream().map(AudioNotes::getName).collect(Collectors.toList());
+        return user.getNotes();
     }
 
     @Override
@@ -66,17 +68,37 @@ public class AudioNotesService implements IAudioBackendService {
 
         AudioNotes note = new AudioNotes();
         note.setPath(storedLocation.toString());
-        note.setName(file.getName());
+        note.setName(file.getOriginalFilename());
         note.setDescription(file.getResource().getDescription());
+        note.setSize(file.getSize());
         user.addAudioNote(note);
+        audioNotesRepository.save(note);
     }
 
     @Override
-    public void removeRecording(String username, String storedLocation) {
+    public void removeRecording(String username, String fileId) {
         List<User> users = userRepository.findUserByUserName(username);
         User user = users.get(0);
 
         List<AudioNotes> notes = user.getNotes();
-        notes.removeIf(note -> note.getPath().equals(storedLocation));
+        AudioNotes noteToDelete = null;
+        for(AudioNotes note : notes){
+            if(note.getId().equals(fileId)){
+                noteToDelete = note;
+            }
+        }
+        notes.remove(noteToDelete);
+        audioNotesRepository.delete(noteToDelete);
+    }
+
+    @Override
+    public AudioNotes findRecording(String username, String fileId) {
+        List<AudioNotes> notes = savedRecordings(username);
+        for(AudioNotes note : notes){
+            if(note.getId().equals(fileId)){
+                return note;
+            }
+        }
+        return null;
     }
 }

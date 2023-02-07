@@ -8,14 +8,14 @@ public class StorageProperties {
     /**
      * Folder location for storing files
      */
-    private String location = "upload-dir";
+    private static String location = "upload-dir";
 
-    public String getLocation() {
+    public static String getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public static void setLocation(String location) {
+        StorageProperties.location = location;
     }
 
 }

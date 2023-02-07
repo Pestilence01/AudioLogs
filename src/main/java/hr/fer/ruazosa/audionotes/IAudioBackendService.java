@@ -11,10 +11,12 @@ public interface IAudioBackendService extends UserDetailsService {
     User registerUser(User user);
     boolean checkUsernameUnique(User user);
 
-    List<String> savedRecordings(String username);
+    List<AudioNotes> savedRecordings(String username);
 
     void addRecording(String username, Path storedLocation, MultipartFile file);
 
-    void removeRecording(String username, String storedLocation);
+    void removeRecording(String username, String fileId);
+
+    AudioNotes findRecording(String username, String fileId);
 
 }

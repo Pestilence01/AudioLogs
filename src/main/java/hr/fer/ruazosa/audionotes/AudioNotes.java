@@ -1,5 +1,7 @@
 package hr.fer.ruazosa.audionotes;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,9 +14,10 @@ import javax.validation.constraints.NotBlank;
 @Table(name="audio_notes")
 public class AudioNotes {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "audio_notes_id")
-    private Long id;
+    private String id;
 
     @NotBlank(message = "Path on disk cannot be unknown")
     @Column(name = "path_on_disc")
@@ -26,6 +29,9 @@ public class AudioNotes {
     @Column(name = "note_description")
     private String description;
 
+    @Column(name = "note_size")
+    private Long size;
+
     public String getDescription() {
         return description;
     }
@@ -34,12 +40,8 @@ public class AudioNotes {
         this.description = description;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getPath() {
@@ -56,5 +58,17 @@ public class AudioNotes {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
     }
 }
