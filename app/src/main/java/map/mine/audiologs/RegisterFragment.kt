@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import map.mine.audiologs.databinding.FragmentRegisterBinding
 
 
@@ -27,9 +29,32 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnRegisterToLogin.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_loginFragment2)
+        binding.buttonRegister.setOnClickListener {
+            if(validateInput()){
+                Toast.makeText(requireContext(), "You have successfully registered", Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+            }
         }
+    }
+
+    private fun validateInput(): Boolean {
+        if(binding.name.text.isBlank()){
+            Toast.makeText(requireContext(), "Please enter your name", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if(binding.surname.text.isBlank()){
+            Toast.makeText(requireContext(), "Please enter your surname", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if(binding.username.text.isBlank()){
+            Toast.makeText(requireContext(), "Please enter your username", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if(binding.password.text.isBlank()){
+            Toast.makeText(requireContext(), "Please enter your password", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
     }
 
 
