@@ -1,4 +1,4 @@
-package hr.fer.ruazosa.audionotes;
+package hr.fer.ruazosa.audionotes.storage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

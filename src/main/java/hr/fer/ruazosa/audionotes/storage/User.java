@@ -1,4 +1,4 @@
-package hr.fer.ruazosa.audionotes;
+package hr.fer.ruazosa.audionotes.storage;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

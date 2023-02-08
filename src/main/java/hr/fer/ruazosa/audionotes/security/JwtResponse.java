@@ -1,4 +1,4 @@
-package hr.fer.ruazosa.audionotes;
+package hr.fer.ruazosa.audionotes.security;
 
 import java.io.Serializable;
 

@@ -1,6 +1,12 @@
 package hr.fer.ruazosa.audionotes;
 
 
+import hr.fer.ruazosa.audionotes.security.JwtResponse;
+import hr.fer.ruazosa.audionotes.security.JwtUtils;
+import hr.fer.ruazosa.audionotes.storage.AudioNotes;
+import hr.fer.ruazosa.audionotes.storage.IAudioBackendService;
+import hr.fer.ruazosa.audionotes.storage.StorageService;
+import hr.fer.ruazosa.audionotes.storage.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.ConstraintViolation;

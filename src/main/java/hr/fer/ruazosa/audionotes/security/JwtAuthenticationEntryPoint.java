@@ -1,4 +1,4 @@
-package hr.fer.ruazosa.audionotes;
+package hr.fer.ruazosa.audionotes.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

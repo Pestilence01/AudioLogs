@@ -1,9 +1,10 @@
-package hr.fer.ruazosa.audionotes;
+package hr.fer.ruazosa.audionotes.storage;
 
+import hr.fer.ruazosa.audionotes.storage.AudioNotes;
+import hr.fer.ruazosa.audionotes.storage.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.channels.MulticastChannel;
 import java.nio.file.Path;
 import java.util.List;
 

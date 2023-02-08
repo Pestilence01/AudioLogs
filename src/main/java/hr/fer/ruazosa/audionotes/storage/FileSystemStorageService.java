@@ -1,4 +1,4 @@
-package hr.fer.ruazosa.audionotes;
+package hr.fer.ruazosa.audionotes.storage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,12 +9,13 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
+import hr.fer.ruazosa.audionotes.StorageException;
+import hr.fer.ruazosa.audionotes.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service

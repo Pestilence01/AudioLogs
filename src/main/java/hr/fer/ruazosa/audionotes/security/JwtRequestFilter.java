@@ -1,5 +1,6 @@
-package hr.fer.ruazosa.audionotes;
+package hr.fer.ruazosa.audionotes.security;
 
+import hr.fer.ruazosa.audionotes.storage.IAudioBackendService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
