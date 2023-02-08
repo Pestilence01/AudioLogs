@@ -22,6 +22,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecordsAdapter
 
+    private var recordList: MutableList<Record> = mutableListOf()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +42,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         setupActionBar()
 
         recyclerView = binding.recyclerView
-        adapter = RecordsAdapter(mutableListOf()) { record ->
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = RecordsAdapter(recordList) { record ->
             playRecording(record)
         }
         recyclerView.adapter = adapter
@@ -60,7 +63,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
 
     fun addRecord(record: Record){
-        adapter.items.add(record)
+        recordList.add(record)
         recyclerView.adapter!!.notifyDataSetChanged()
     }
 

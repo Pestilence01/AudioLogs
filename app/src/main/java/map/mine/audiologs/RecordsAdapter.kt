@@ -1,13 +1,12 @@
 package map.mine.audiologs
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import map.mine.audiologs.databinding.AudioItemBinding
 
-class RecordsAdapter (
-    var items: MutableList<Record?>,
+class RecordsAdapter(
+    private var items: MutableList<Record>,
     private val onItemClickCallback: (Record) -> Unit
 ) : RecyclerView.Adapter<RecordsAdapter.RecordsViewHolder>() {
 
