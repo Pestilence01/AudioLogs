@@ -25,6 +25,11 @@ public class FileSystemStorageService implements StorageService {
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
+        try {
+            Files.createDirectories(Paths.get(properties.getLocation()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
