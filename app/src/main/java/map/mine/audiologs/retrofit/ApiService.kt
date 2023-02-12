@@ -6,6 +6,7 @@ import map.mine.audiologs.retrofit.requests.RegisterUserRequest
 import map.mine.audiologs.retrofit.responses.AudioNotesResponse
 import map.mine.audiologs.retrofit.responses.AuthenticateResponse
 import map.mine.audiologs.retrofit.responses.RegisterUserResponse
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -19,10 +20,12 @@ interface ApiService {
     @POST("/authenticate")
     fun authenticateUser(@Body request: AuthenticateRequest): Call<AuthenticateResponse>
 
+    @Multipart
     @POST("/upload")
     fun uploadAudioNote(
         @Header("Authorization") token: String,
-        @Body body: RequestBody
+        @Part("description") description: RequestBody,
+        @Part/*("file")*/ file: MultipartBody.Part
     ): Call<String>
 
     @GET("/files")
