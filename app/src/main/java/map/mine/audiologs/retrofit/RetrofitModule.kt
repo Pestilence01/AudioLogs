@@ -10,7 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
 object RetrofitModule {
-    private const val BASE_URL = "http://192.168.1.7:8080"
+    private const val BASE_URL = "http://192.168.1.112:8080"
     lateinit var retrofit: ApiService
 
     fun initRetrofit(context: Context) {

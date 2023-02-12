@@ -10,6 +10,7 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import map.mine.audiologs.R
@@ -45,6 +46,12 @@ class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragme
 
         recorder = MediaRecorder()
 
+        buttonState(binding.record, true)
+        buttonState(binding.stop, false)
+        buttonState(binding.play, false)
+
+
+
         binding.record.setOnClickListener {
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
             recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
@@ -52,11 +59,19 @@ class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragme
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
             recorder.prepare()
             recorder.start()
+
+            buttonState(binding.record, false)
+            buttonState(binding.stop, true)
+            buttonState(binding.play, false)
         }
 
         binding.stop.setOnClickListener {
             recorder.stop()
             recorder.release()
+
+            buttonState(binding.record, false)
+            buttonState(binding.stop, false)
+            buttonState(binding.play, true)
         }
 
         binding.play.setOnClickListener {
@@ -77,6 +92,39 @@ class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragme
 
 
     }
+
+    private fun buttonState(button: AppCompatButton, enabled: Boolean) {
+        when(button){
+            binding.record -> {
+                if(enabled){
+                    binding.record.background = binding.record.context.getDrawable(R.drawable.ic_baseline_mic_24)
+                    binding.record.isEnabled = true
+                } else {
+                    binding.record.background = binding.record.context.getDrawable(R.drawable.ic_baseline_mic_disabled_24)
+                    binding.record.isEnabled = false
+                }
+            }
+            binding.stop -> {
+                if(enabled){
+                    binding.stop.background = binding.record.context.getDrawable(R.drawable.ic_baseline_stop_24)
+                    binding.stop.isEnabled = true
+                } else {
+                    binding.stop.background = binding.record.context.getDrawable(R.drawable.ic_baseline_stop_disabled_24)
+                    binding.stop.isEnabled = false
+                }
+            }
+            binding.play -> {
+                if(enabled){
+                    binding.play.background = binding.record.context.getDrawable(R.drawable.ic_baseline_play_arrow_24)
+                    binding.play.isEnabled = true
+                } else {
+                    binding.play.background = binding.record.context.getDrawable(R.drawable.ic_baseline_play_arrow_disabled_24)
+                    binding.play.isEnabled = false
+                }
+            }
+        }
+    }
+
 
     private fun getMicrophonePermission() {
         if(ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
