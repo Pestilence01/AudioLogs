@@ -1,4 +1,4 @@
-package map.mine.audiologs
+package map.mine.audiologs.fragments
 
 
 import android.content.ContextWrapper
@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import map.mine.audiologs.R
+import map.mine.audiologs.models.AudioNote
 import map.mine.audiologs.databinding.BottomsheetFragmentBinding
 import java.io.File
 
@@ -65,8 +67,11 @@ class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragme
         }
 
         binding.upload.setOnClickListener {
-            val record = Record(binding.fileName.text.toString(), getRecordingFilePath(binding.fileName.text.toString()))
-            parentFragment.addRecord(record)
+           /* val audioNote = AudioNote(
+                getRecordingFilePath(binding.fileName.text.toString()),
+                binding.fileName.text.toString(), ,
+            )
+            parentFragment.addRecord(audioNote)*/ //TODO nemoj ovo zaboraviti
             dismiss()
         }
 
