@@ -37,6 +37,8 @@ class BottomSheetFragment(fragment: DashboardFragment) :
     private var _binding: BottomsheetFragmentBinding? = null
     private val binding get() = _binding!!
 
+    private var parentFragment = fragment
+
 
     private val MICROPHONE_PERMISSION_CODE = 200
 
@@ -72,9 +74,8 @@ class BottomSheetFragment(fragment: DashboardFragment) :
 
         binding.record.setOnClickListener {
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
-<<<<<<< app/src/main/java/map/mine/audiologs/fragments/BottomSheetFragment.kt
             recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            recorder.setOutputFile(getRecordingFilePath(binding.fileName.text.toString()))
+            recorder.setOutputFile(getRecordingFilePath(binding.nameLoginBottomSheetText.text.toString()))
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             recorder.prepare()
             recorder.start()
@@ -101,12 +102,12 @@ class BottomSheetFragment(fragment: DashboardFragment) :
         }
 
         binding.upload.setOnClickListener {
-            val location = getRecordingFilePath(binding.fileName.text.toString())
+            val location = getRecordingFilePath(binding.nameLoginBottomSheetText.text.toString())
 
             val file: File = File(location)
             val audioNote = AudioNote(
                 path = file.absolutePath,
-                name = binding.fileName.text.toString(),
+                name = binding.nameLoginBottomSheetText.text.toString(),
                 description = "PROBA", //TODO Pricekat Lovrin commit
                 size = file.length()
             )

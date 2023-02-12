@@ -33,7 +33,7 @@ class RecordsAdapter(
                 parentFragment.playRecording(item)
             }
             binding.deleteButton.setOnClickListener {
-                parentFragment.deleteRecord(item)
+
             }
         }
 
