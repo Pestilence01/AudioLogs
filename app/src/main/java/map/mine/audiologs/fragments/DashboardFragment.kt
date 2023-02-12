@@ -68,9 +68,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
         recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = RecordsAdapter(audioNoteList) { record ->
-            playRecording(record)
-        }
+        adapter = RecordsAdapter(audioNoteList, this)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(
             DividerItemDecoration(
@@ -173,7 +171,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         recyclerView.adapter!!.notifyDataSetChanged()
     }
 
-    private fun playRecording(audioNote: AudioNote) {
+    fun playRecording(audioNote: AudioNote) {
         if(mediaPlayer.isPlaying) {
             mediaPlayer.stop()
         }

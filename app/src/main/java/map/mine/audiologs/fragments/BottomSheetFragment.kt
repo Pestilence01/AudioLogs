@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -36,7 +37,6 @@ class BottomSheetFragment(fragment: DashboardFragment) :
     private var _binding: BottomsheetFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val parentFragment = fragment
 
     private val MICROPHONE_PERMISSION_CODE = 200
 
@@ -64,23 +64,38 @@ class BottomSheetFragment(fragment: DashboardFragment) :
 
         recorder = MediaRecorder()
 
+        buttonState(binding.record, true)
+        buttonState(binding.stop, false)
+        buttonState(binding.play, false)
+
+
+
         binding.record.setOnClickListener {
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
+<<<<<<< app/src/main/java/map/mine/audiologs/fragments/BottomSheetFragment.kt
             recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             recorder.setOutputFile(getRecordingFilePath(binding.fileName.text.toString()))
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             recorder.prepare()
             recorder.start()
+
+            buttonState(binding.record, false)
+            buttonState(binding.stop, true)
+            buttonState(binding.play, false)
         }
 
         binding.stop.setOnClickListener {
             recorder.stop()
             recorder.release()
+
+            buttonState(binding.record, false)
+            buttonState(binding.stop, false)
+            buttonState(binding.play, true)
         }
 
         binding.play.setOnClickListener {
             var mediaPlayer = MediaPlayer()
-            mediaPlayer.setDataSource(getRecordingFilePath(binding.fileName.text.toString()))
+            mediaPlayer.setDataSource(getRecordingFilePath(binding.nameLoginBottomSheetText.text.toString()))
             mediaPlayer.prepare()
             mediaPlayer.start()
         }
@@ -147,6 +162,38 @@ class BottomSheetFragment(fragment: DashboardFragment) :
 
             })
 
+    }
+
+    private fun buttonState(button: AppCompatButton, enabled: Boolean) {
+        when(button){
+            binding.record -> {
+                if(enabled){
+                    binding.record.background = binding.record.context.getDrawable(R.drawable.ic_baseline_mic_24)
+                    binding.record.isEnabled = true
+                } else {
+                    binding.record.background = binding.record.context.getDrawable(R.drawable.ic_baseline_mic_disabled_24)
+                    binding.record.isEnabled = false
+                }
+            }
+            binding.stop -> {
+                if(enabled){
+                    binding.stop.background = binding.record.context.getDrawable(R.drawable.ic_baseline_stop_24)
+                    binding.stop.isEnabled = true
+                } else {
+                    binding.stop.background = binding.record.context.getDrawable(R.drawable.ic_baseline_stop_disabled_24)
+                    binding.stop.isEnabled = false
+                }
+            }
+            binding.play -> {
+                if(enabled){
+                    binding.play.background = binding.record.context.getDrawable(R.drawable.ic_baseline_play_arrow_24)
+                    binding.play.isEnabled = true
+                } else {
+                    binding.play.background = binding.record.context.getDrawable(R.drawable.ic_baseline_play_arrow_disabled_24)
+                    binding.play.isEnabled = false
+                }
+            }
+        }
     }
 
     private fun getMicrophonePermission() {

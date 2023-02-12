@@ -16,10 +16,32 @@
         android:textSize="24sp"/>
 
     <TextView
-        android:id="@+id/user"
+        android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="From: User"
+        android:text="Description"
         android:textSize="16sp"/>
+    
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/play_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="-8dp"
+            android:background="@drawable/ic_baseline_play_arrow_24"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/delete_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_baseline_delete_24"/>
+        
+    </LinearLayout>
 
 </LinearLayout>

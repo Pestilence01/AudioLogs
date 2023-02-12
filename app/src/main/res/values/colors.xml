@@ -9,4 +9,9 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="magenta">#FC0356</color>
+
+    <color name="colorSnackBarSuccess">#41f294</color>
+    <color name="colorSnackBarError">#F72400</color>
+
+    <color name="defaultGrey">#808080</color>
 </resources>
