@@ -73,14 +73,13 @@ public class AudioNotesController {
             return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(!audioNotesService.checkUsernameUnique(user)){
+        if (!audioNotesService.checkUsernameUnique(user)) {
             return new ResponseEntity<>(user, HttpStatus.CONFLICT);
         }
 
         audioNotesService.registerUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
 
 
     @PostMapping("/authenticate")
@@ -109,7 +108,7 @@ public class AudioNotesController {
     }
 
     @GetMapping("/files")
-    public ResponseEntity<List<ResponseFile>> listUploadedFiles(){
+    public ResponseEntity<List<ResponseFile>> listUploadedFiles() {
         String username = jwtUtils.getUsernameFromToken(getBearerTokenHeader());
         List<ResponseFile> files = audioNotesService.savedRecordings(username).stream().map(note -> {
             String fileDownloadUri = ServletUriComponentsBuilder
@@ -124,7 +123,7 @@ public class AudioNotesController {
                     fileDownloadUri,
                     note.getSize()
             );
-                }).collect(Collectors.toList());
+        }).collect(Collectors.toList());
         return ResponseEntity.ok(files);
     }
 
@@ -133,9 +132,9 @@ public class AudioNotesController {
     public ResponseEntity<Resource> serveFile(@PathVariable String fileId) {
         String username = jwtUtils.getUsernameFromToken(getBearerTokenHeader());
         AudioNotes note = audioNotesService.findRecording(username, fileId);
-        if(Objects.isNull(note)){
+        if (Objects.isNull(note)) {
             return ResponseEntity.notFound().build();
-        } else{
+        } else {
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + note.getName() + "\"")
                     .body(storageService.loadAsResource(note.getPath()));
@@ -144,18 +143,18 @@ public class AudioNotesController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Object> handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Object> handleFileUpload(@RequestParam("description") String description, @RequestParam("file") MultipartFile file) {
 
         String username = jwtUtils.getUsernameFromToken(getBearerTokenHeader());
 
         Path destination = storageService.store(file);
-        audioNotesService.addRecording(username, destination, file);
+        audioNotesService.addRecording(username, destination, file, description);
 
         return ResponseEntity.ok().body("You successfully uploaded " + file.getOriginalFilename() + "!");
     }
 
     @DeleteMapping("/files/{fileId:.+}")
-    public ResponseEntity<Object> removeNote(@PathVariable String fileId){
+    public ResponseEntity<Object> removeNote(@PathVariable String fileId) {
         String username = jwtUtils.getUsernameFromToken(getBearerTokenHeader());
         AudioNotes note = audioNotesService.findRecording(username, fileId);
 
