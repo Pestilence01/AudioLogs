@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -21,12 +20,13 @@ import map.mine.audiologs.retrofit.RetrofitModule
 import map.mine.audiologs.retrofit.SessionManager
 import map.mine.audiologs.retrofit.responses.AudioNotesResponse
 import okhttp3.ResponseBody
-import okhttp3.internal.wait
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.file.Files.delete
+import java.nio.file.Paths
 
 
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
@@ -54,7 +54,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     ): View? {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
 
@@ -188,13 +187,31 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     private fun setupActionBar() {
         val toolbar = binding.toolbarDashboard
         toolbar.title = sessionManager.fetchUserName()
-        Toast.makeText(requireContext(), sessionManager.fetchAuthToken(), Toast.LENGTH_LONG).show()
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_baseline_logout_24)
         toolbar.setNavigationOnClickListener {
+            deleteTokenAndData()
             Navigation.findNavController(requireView())
                 .navigate(R.id.action_dashboardFragment_to_loginFragment2)
         }
     }
 
+    private fun deleteTokenAndData() {
+        if(mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+        }
+
+        audioNoteList.forEach{
+            File(it.path).delete()
+        }
+        audioNoteList.clear()
+        adapter.notifyDataSetChanged()
+        sessionManager.shutdown()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        deleteTokenAndData()
+        Log.i("CLOSED", "Success")
+    }
 }

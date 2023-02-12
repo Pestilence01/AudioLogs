@@ -7,27 +7,44 @@ import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
+import androidx.core.net.toUri
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import map.mine.audiologs.R
 import map.mine.audiologs.models.AudioNote
 import map.mine.audiologs.databinding.BottomsheetFragmentBinding
+import map.mine.audiologs.retrofit.RetrofitModule
+import map.mine.audiologs.retrofit.SessionManager
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 
-class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragment(R.layout.bottomsheet_fragment) {
+class BottomSheetFragment(fragment: DashboardFragment) :
+    BottomSheetDialogFragment(R.layout.bottomsheet_fragment) {
 
     private var _binding: BottomsheetFragmentBinding? = null
     private val binding get() = _binding!!
 
     private val parentFragment = fragment
 
-
     private val MICROPHONE_PERMISSION_CODE = 200
 
     private lateinit var recorder: MediaRecorder
+
+    private lateinit var sessionManager: SessionManager
+
+    private lateinit var module: RetrofitModule
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,13 +60,15 @@ class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragme
 
         getMicrophonePermission()
 
+        sessionManager = SessionManager(requireContext())
+
         recorder = MediaRecorder()
 
         binding.record.setOnClickListener {
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
-            recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             recorder.setOutputFile(getRecordingFilePath(binding.fileName.text.toString()))
-            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             recorder.prepare()
             recorder.start()
         }
@@ -67,20 +86,83 @@ class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragme
         }
 
         binding.upload.setOnClickListener {
-           /* val audioNote = AudioNote(
-                getRecordingFilePath(binding.fileName.text.toString()),
-                binding.fileName.text.toString(), ,
+            val location = getRecordingFilePath(binding.fileName.text.toString())
+
+            val file: File = File(location)
+            val audioNote = AudioNote(
+                path = file.absolutePath,
+                name = binding.fileName.text.toString(),
+                description = "PROBA", //TODO Pricekat Lovrin commit
+                size = file.length()
             )
-            parentFragment.addRecord(audioNote)*/ //TODO nemoj ovo zaboraviti
+            parentFragment.addRecord(audioNote)
+            uploadRecording(audioNote)
             dismiss()
         }
 
 
     }
 
+    private fun uploadRecording(audioNote: AudioNote) {
+
+        module = RetrofitModule
+        module.initRetrofit(requireContext())
+
+        val file: File = File(audioNote.path)
+
+        val requestFile: RequestBody =
+            file
+                .asRequestBody(
+                    "audio/mpeg".toMediaTypeOrNull()
+                )
+
+        val body: MultipartBody.Part =
+            MultipartBody.Part.createFormData("file", file.name, requestFile)
+        val description: RequestBody = audioNote.description.toRequestBody(MultipartBody.FORM)
+
+        module.retrofit.uploadAudioNote(
+            token = "Bearer ${sessionManager.fetchAuthToken()}",
+            description,
+            body
+        )
+            .enqueue(object : Callback<String> {
+                override fun onResponse(
+                    call: Call<String>,
+                    response: Response<String>
+                ) {
+                    val loginResponse = response.body()
+
+                    if (response.code() == 200) {
+                        Log.i("success: ", loginResponse!!)
+
+                    } else {
+                        Log.e("Upload fail", response.errorBody().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    Log.e("Communication error", t.message.toString())
+                    Log.i("success: ", "NO")
+                }
+
+            })
+
+    }
+
     private fun getMicrophonePermission() {
-        if(ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE), MICROPHONE_PERMISSION_CODE)
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    android.Manifest.permission.RECORD_AUDIO,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
+                MICROPHONE_PERMISSION_CODE
+            )
         }
     }
 
@@ -97,7 +179,7 @@ class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragme
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == MICROPHONE_PERMISSION_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == MICROPHONE_PERMISSION_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
         }
     }
