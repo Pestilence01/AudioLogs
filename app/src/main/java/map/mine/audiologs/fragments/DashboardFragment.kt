@@ -69,9 +69,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
         recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = RecordsAdapter(audioNoteList) { record ->
-            playRecording(record)
-        }
+        adapter = RecordsAdapter(audioNoteList, this)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(
             DividerItemDecoration(
@@ -174,7 +172,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         recyclerView.adapter!!.notifyDataSetChanged()
     }
 
-    private fun playRecording(audioNote: AudioNote) {
+    fun playRecording(audioNote: AudioNote) {
         if(mediaPlayer.isPlaying) {
             mediaPlayer.stop()
         }
@@ -195,6 +193,10 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             Navigation.findNavController(requireView())
                 .navigate(R.id.action_dashboardFragment_to_loginFragment2)
         }
+    }
+
+    fun deleteRecord(audioNote: AudioNote) {
+        Toast.makeText(requireContext(), "Deleted", Toast.LENGTH_SHORT).show()
     }
 
 }
