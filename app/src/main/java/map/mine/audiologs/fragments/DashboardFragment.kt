@@ -45,6 +45,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
     private lateinit var saveDir: File
 
+    private var mediaPlayer = MediaPlayer()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -173,7 +175,10 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
 
     private fun playRecording(audioNote: AudioNote) {
-        var mediaPlayer = MediaPlayer()
+        if(mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+        }
+        mediaPlayer = MediaPlayer()
         mediaPlayer.setDataSource(audioNote.path)
         mediaPlayer.prepare()
         mediaPlayer.start()
@@ -192,6 +197,4 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         }
     }
 
-
 }
-
