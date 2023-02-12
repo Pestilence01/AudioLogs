@@ -23,8 +23,6 @@ class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragme
     private var _binding: BottomsheetFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val parentFragment = fragment
-
 
     private val MICROPHONE_PERMISSION_CODE = 200
 
@@ -55,7 +53,7 @@ class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragme
         binding.record.setOnClickListener {
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
             recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-            recorder.setOutputFile(getRecordingFilePath(binding.fileName.text.toString()))
+            recorder.setOutputFile(getRecordingFilePath(binding.nameLoginBottomSheetText.text.toString()))
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
             recorder.prepare()
             recorder.start()
@@ -76,7 +74,7 @@ class BottomSheetFragment(fragment: DashboardFragment) : BottomSheetDialogFragme
 
         binding.play.setOnClickListener {
             var mediaPlayer = MediaPlayer()
-            mediaPlayer.setDataSource(getRecordingFilePath(binding.fileName.text.toString()))
+            mediaPlayer.setDataSource(getRecordingFilePath(binding.nameLoginBottomSheetText.text.toString()))
             mediaPlayer.prepare()
             mediaPlayer.start()
         }

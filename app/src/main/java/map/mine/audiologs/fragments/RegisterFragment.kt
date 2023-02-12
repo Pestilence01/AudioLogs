@@ -42,9 +42,9 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             if(validateInput()){
                 //Toast.makeText(requireContext(), "You have successfully registered", Toast.LENGTH_SHORT).show()
 
-                val userRequest = User(username = binding.username.text.toString(),
-                    password = binding.password.text.toString(), firstName = binding.name.text.toString(),
-                    lastName = binding.surname.text.toString(), email = binding.email.text.toString())
+                val userRequest = User(username = binding.usernameRegisterText.text.toString(),
+                    password = binding.passwordRegisterText.text.toString(), firstName = binding.nameRegisterText.text.toString(),
+                    lastName = binding.surnameRegisterText.text.toString(), email = binding.emailRegisterText.text.toString())
 
                 val module = RetrofitModule
                 module.initRetrofit(requireContext())
@@ -76,19 +76,19 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     }
 
     private fun validateInput(): Boolean {
-        if(binding.name.text.isBlank()){
+        if(binding.nameRegisterText.text!!.isBlank()){
             Toast.makeText(requireContext(), "Please enter your name", Toast.LENGTH_SHORT).show()
             return false
         }
-        if(binding.surname.text.isBlank()){
+        if(binding.surnameRegisterText.text!!.isBlank()){
             Toast.makeText(requireContext(), "Please enter your surname", Toast.LENGTH_SHORT).show()
             return false
         }
-        if(binding.username.text.isBlank()){
+        if(binding.usernameRegisterText.text!!.isBlank()){
             Toast.makeText(requireContext(), "Please enter your username", Toast.LENGTH_SHORT).show()
             return false
         }
-        if(binding.password.text.isBlank()){
+        if(binding.passwordRegisterText.text!!.isBlank()){
             Toast.makeText(requireContext(), "Please enter your password", Toast.LENGTH_SHORT).show()
             return false
         }

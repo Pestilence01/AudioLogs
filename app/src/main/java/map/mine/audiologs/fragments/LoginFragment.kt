@@ -48,9 +48,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 //Toast.makeText(requireContext(), "You have successfully logged in", Toast.LENGTH_SHORT).show()
                 //Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_dashboardFragment)
 
-                val authenticateRequest = AuthenticateRequest(username = binding.username.text.toString(), password = binding.password.text.toString())
+                val authenticateRequest = AuthenticateRequest(username = binding.usernameLoginText.text.toString(), password = binding.passwordLoginText.text.toString())
                 sessionManager = SessionManager(requireContext())
-                sessionManager.saveUserName(username = binding.username.text.toString())
+                sessionManager.saveUserName(username = binding.usernameLoginText.text.toString())
 
                 val module = RetrofitModule
                 module.initRetrofit(requireContext())
@@ -86,11 +86,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun validateInput(): Boolean {
-        if(binding.username.text.isBlank()){
+        if(binding.usernameLoginText.text!!.isBlank()){
             Toast.makeText(requireContext(), "Please enter your username", Toast.LENGTH_SHORT).show()
             return false
         }
-        if(binding.password.text.isBlank()){
+        if(binding.passwordLoginText.text!!.isBlank()){
             Toast.makeText(requireContext(), "Please enter your password", Toast.LENGTH_SHORT).show()
             return false
         }
