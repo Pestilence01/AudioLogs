@@ -10,5 +10,5 @@ data class AudioNote(
     @SerialName("note_name") val name: String,
     @SerialName("note_description") val description: String,
     @SerialName("note_size") val size: Long,
-    @SerialName("url") val url: String
+    @SerialName("url") var url: String
 )
