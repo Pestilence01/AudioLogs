@@ -153,6 +153,7 @@ class BottomSheetFragment(fragment: DashboardFragment) :
                     if (response.code() == 200) {
                         if (uploadResponse != null) {
                             Log.i("success: ", uploadResponse.message)
+                            audioNote.url = uploadResponse.message
                         }
 
                     } else {
