@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_baseline_close_24"
+        android:layout_gravity="end"
+        android:layout_margin="16dp"/>
+
+    <TextView
+        android:id="@+id/addNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add new record"
+        android:textStyle="bold"
+        android:textSize="56sp"
+        android:layout_marginTop="-16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameLoginBottomSheet"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/white"
+        android:hint="Name"
+        android:textColorHint="@color/defaultGrey"
+        app:boxStrokeColor="@color/magenta"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nameLoginBottomSheetText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="35"
+            android:textColor="@color/black"
+            android:textColorHint="@color/magenta"
+            android:textSize="16sp"
+            app:boxStrokeColor="@color/magenta" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/descriptionLoginBottomSheet"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/white"
+        android:hint="Description"
+        android:textColorHint="@color/defaultGrey"
+        app:boxStrokeColor="@color/magenta"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/descriptionLoginBottomSheetText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textColorHint="@color/magenta"
+            android:textSize="16sp"
+            app:boxStrokeColor="@color/magenta" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/record"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_baseline_mic_24"
+            android:layout_margin="16dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/stop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_baseline_stop_24"
+            android:layout_margin="16dp"
+            android:textStyle="bold"
+            android:textColor="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/play"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_baseline_play_arrow_24"
+            android:layout_margin="16dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_style"
+        android:text="upload"
+        android:layout_margin="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+/>
+
+</LinearLayout>
