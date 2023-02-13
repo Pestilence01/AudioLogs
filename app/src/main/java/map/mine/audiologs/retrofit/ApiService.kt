@@ -25,8 +25,8 @@ interface ApiService {
     fun uploadAudioNote(
         @Header("Authorization") token: String,
         @Part("description") description: RequestBody,
-        @Part/*("file")*/ file: MultipartBody.Part
-    ): Call<String>
+        @Part file: MultipartBody.Part
+    ): Call<Message>
 
     @GET("/files")
     fun getUserAudioNotes(@Header("Authorization") token: String): Call<List<AudioNotesResponse>>
@@ -40,5 +40,5 @@ interface ApiService {
     @DELETE("/files/{fileId}")
     fun deleteAudioNote(
         @Header("Authorization") token: String, @Path("fileId") fileUrl: String
-    ): Call<String>
+    ): Call<Message>
 }

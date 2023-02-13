@@ -18,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import map.mine.audiologs.R
 import map.mine.audiologs.models.AudioNote
 import map.mine.audiologs.databinding.BottomsheetFragmentBinding
+import map.mine.audiologs.retrofit.Message
 import map.mine.audiologs.retrofit.RetrofitModule
 import map.mine.audiologs.retrofit.SessionManager
 import okhttp3.MediaType
@@ -108,8 +109,9 @@ class BottomSheetFragment(fragment: DashboardFragment) :
             val audioNote = AudioNote(
                 path = file.absolutePath,
                 name = binding.nameLoginBottomSheetText.text.toString(),
-                description = "PROBA", //TODO Pricekat Lovrin commit
-                size = file.length()
+                description = binding.descriptionLoginBottomSheetText.text.toString(),
+                size = file.length(),
+                url = "default"
             )
             parentFragment.addRecord(audioNote)
             uploadRecording(audioNote)
@@ -141,22 +143,24 @@ class BottomSheetFragment(fragment: DashboardFragment) :
             description,
             body
         )
-            .enqueue(object : Callback<String> {
+            .enqueue(object : Callback<Message> {
                 override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
+                    call: Call<Message>,
+                    response: Response<Message>
                 ) {
-                    val loginResponse = response.body()
+                    val uploadResponse = response.body()
 
                     if (response.code() == 200) {
-                        Log.i("success: ", loginResponse!!)
+                        if (uploadResponse != null) {
+                            Log.i("success: ", uploadResponse.message)
+                        }
 
                     } else {
                         Log.e("Upload fail", response.errorBody().toString())
                     }
                 }
 
-                override fun onFailure(call: Call<String>, t: Throwable) {
+                override fun onFailure(call: Call<Message>, t: Throwable) {
                     Log.e("Communication error", t.message.toString())
                     Log.i("success: ", "NO")
                 }

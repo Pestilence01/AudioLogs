@@ -33,13 +33,13 @@ class RecordsAdapter(
                 parentFragment.playRecording(item)
             }
             binding.deleteButton.setOnClickListener {
-                
+                parentFragment.deleteRecording(item)
             }
         }
 
         fun bind(audioNote: AudioNote){
             binding.title.text = audioNote.name
-            binding.description.text = "Description"
+            binding.description.text = audioNote.description
         }
 
     }
