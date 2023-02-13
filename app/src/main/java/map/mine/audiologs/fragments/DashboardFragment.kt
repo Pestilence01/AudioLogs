@@ -16,6 +16,7 @@ import map.mine.audiologs.R
 import map.mine.audiologs.models.AudioNote
 import map.mine.audiologs.adapters.RecordsAdapter
 import map.mine.audiologs.databinding.FragmentDashboardBinding
+import map.mine.audiologs.retrofit.Message
 import map.mine.audiologs.retrofit.RetrofitModule
 import map.mine.audiologs.retrofit.SessionManager
 import map.mine.audiologs.retrofit.responses.AudioNotesResponse
@@ -150,7 +151,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
                     path = file!!.absolutePath,
                     name = element.name!!,
                     description = element.description!!,
-                    size = element.size!!
+                    size = element.size!!,
+                    url = element.url
                 )
 
                 audioNoteList.add(audioNote)
@@ -211,5 +213,44 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         super.onStop()
         deleteTokenAndData()
         Log.i("CLOSED", "Success")
+    }
+
+    fun deleteRecording(item: AudioNote) {
+        module = RetrofitModule
+        module.initRetrofit(requireContext())
+
+        val splitted = item.url.split("/")
+        val fileId = splitted[splitted.size-1]
+
+        module.retrofit.deleteAudioNote(token = "Bearer ${sessionManager.fetchAuthToken()}", fileId)
+            .enqueue(object : Callback<Message> {
+                override fun onResponse(
+                    call: Call<Message>,
+                    response: Response<Message>
+                ) {
+                    val responseMessage = response.body()
+
+                    if (response.code() == 200) {
+                        if (responseMessage != null) {
+                            Log.i("success: ", responseMessage.message)
+                        }
+                        deleteLocally(item)
+
+                    } else {
+                        Log.e("Delete failed", response.errorBody().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<Message>, t: Throwable) {
+                    Log.e("Communication error", t.message.toString())
+                    Log.i("success: ", "NO")
+                }
+
+            })
+    }
+
+    private fun deleteLocally(item: AudioNote) {
+        audioNoteList.remove(item)
+        adapter.notifyDataSetChanged()
     }
 }
