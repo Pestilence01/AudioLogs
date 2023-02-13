@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -57,6 +59,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
 
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -82,6 +85,13 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         binding.recordLog.setOnClickListener {
             bottomSheetFragment.show(requireActivity().supportFragmentManager, "dsa")
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+
+        })
 
     }
 
