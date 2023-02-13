@@ -14,7 +14,7 @@ public interface IAudioBackendService extends UserDetailsService {
 
     List<AudioNotes> savedRecordings(String username);
 
-    void addRecording(String username, Path storedLocation, MultipartFile file, String description);
+    String addRecording(String username, Path storedLocation, MultipartFile file, String description);
 
     void removeRecording(String username, String fileId);
 

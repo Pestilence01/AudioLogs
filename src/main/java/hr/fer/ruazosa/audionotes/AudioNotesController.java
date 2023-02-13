@@ -148,9 +148,9 @@ public class AudioNotesController {
         String username = jwtUtils.getUsernameFromToken(getBearerTokenHeader());
 
         Path destination = storageService.store(file);
-        audioNotesService.addRecording(username, destination, file, description);
+        String fileId = audioNotesService.addRecording(username, destination, file, description);
 
-        return ResponseEntity.ok().body(new Message("You successfully uploaded " + file.getOriginalFilename() + "!"));
+        return ResponseEntity.ok().body(new Message(fileId));
     }
 
     @DeleteMapping("/files/{fileId:.+}")

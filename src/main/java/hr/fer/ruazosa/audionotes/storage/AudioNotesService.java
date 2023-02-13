@@ -59,7 +59,7 @@ public class AudioNotesService implements IAudioBackendService {
     }
 
     @Override
-    public void addRecording(String username, Path storedLocation, MultipartFile file, String description) {
+    public String addRecording(String username, Path storedLocation, MultipartFile file, String description) {
         List<User> users = userRepository.findUserByUserName(username);
         User user = users.get(0);
 
@@ -70,6 +70,15 @@ public class AudioNotesService implements IAudioBackendService {
         note.setSize(file.getSize());
         user.addAudioNote(note);
         audioNotesRepository.save(note);
+
+        List<AudioNotes> notes = savedRecordings(username);
+        for(AudioNotes audio : notes){
+            if(audio.getPath().equals(note.getPath())){
+                return audio.getId();
+            }
+        }
+
+        return "error";
     }
 
     @Override
