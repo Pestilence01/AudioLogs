@@ -143,24 +143,24 @@ public class AudioNotesController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Object> handleFileUpload(@RequestParam("description") String description, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Message> handleFileUpload(@RequestParam("description") String description, @RequestParam("file") MultipartFile file) {
 
         String username = jwtUtils.getUsernameFromToken(getBearerTokenHeader());
 
         Path destination = storageService.store(file);
         audioNotesService.addRecording(username, destination, file, description);
 
-        return ResponseEntity.ok().body("You successfully uploaded " + file.getOriginalFilename() + "!");
+        return ResponseEntity.ok().body(new Message("You successfully uploaded " + file.getOriginalFilename() + "!"));
     }
 
     @DeleteMapping("/files/{fileId:.+}")
-    public ResponseEntity<Object> removeNote(@PathVariable String fileId) {
+    public ResponseEntity<Message> removeNote(@PathVariable String fileId) {
         String username = jwtUtils.getUsernameFromToken(getBearerTokenHeader());
         AudioNotes note = audioNotesService.findRecording(username, fileId);
 
         storageService.delete(note.getPath());
         audioNotesService.removeRecording(username, fileId);
-        return ResponseEntity.ok("deleted file " + note.getName());
+        return ResponseEntity.ok(new Message("deleted file " + note.getName()));
     }
 
 
