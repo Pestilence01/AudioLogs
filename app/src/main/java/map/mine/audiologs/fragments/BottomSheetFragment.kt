@@ -1,21 +1,29 @@
 package map.mine.audiologs.fragments
 
 
+import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.PackageManager
+import android.graphics.Typeface
 import android.media.MediaPlayer
 import android.media.MediaRecorder
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import map.mine.audiologs.R
+import map.mine.audiologs.activities.MainActivity
 import map.mine.audiologs.models.AudioNote
 import map.mine.audiologs.databinding.BottomsheetFragmentBinding
 import map.mine.audiologs.retrofit.Message
@@ -49,6 +57,8 @@ class BottomSheetFragment(fragment: DashboardFragment) :
 
     private lateinit var module: RetrofitModule
 
+    private lateinit var parentActivity: MainActivity
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,8 +68,17 @@ class BottomSheetFragment(fragment: DashboardFragment) :
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        parentActivity = activity as MainActivity
+
+        val typeface: Typeface =
+            Typeface.createFromAsset(requireContext().assets, "Happy & Balloons.ttf")
+        binding.addNote.typeface = typeface
+
+        isCancelable = false
 
         getMicrophonePermission()
 
@@ -71,7 +90,14 @@ class BottomSheetFragment(fragment: DashboardFragment) :
         buttonState(binding.stop, false)
         buttonState(binding.play, false)
 
-
+        binding.cancel.setOnClickListener {
+            dismiss()
+            binding.nameLoginBottomSheetText.text!!.clear()
+            binding.descriptionLoginBottomSheetText.text!!.clear()
+            buttonState(binding.record, true)
+            buttonState(binding.stop, false)
+            buttonState(binding.play, false)
+        }
 
         binding.record.setOnClickListener {
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -81,6 +107,8 @@ class BottomSheetFragment(fragment: DashboardFragment) :
             recorder.prepare()
             recorder.start()
 
+            Toast.makeText(requireContext(), "Recording has started", Toast.LENGTH_SHORT).show()
+
             buttonState(binding.record, false)
             buttonState(binding.stop, true)
             buttonState(binding.play, false)
@@ -89,6 +117,8 @@ class BottomSheetFragment(fragment: DashboardFragment) :
         binding.stop.setOnClickListener {
             recorder.stop()
             recorder.release()
+
+            Toast.makeText(requireContext(), "Recording has stopped", Toast.LENGTH_SHORT).show()
 
             buttonState(binding.record, false)
             buttonState(binding.stop, false)
@@ -103,21 +133,45 @@ class BottomSheetFragment(fragment: DashboardFragment) :
         }
 
         binding.upload.setOnClickListener {
-            val location = getRecordingFilePath(binding.nameLoginBottomSheetText.text.toString())
 
-            val file: File = File(location)
-            val audioNote = AudioNote(
-                path = file.absolutePath,
-                name = binding.nameLoginBottomSheetText.text.toString(),
-                description = binding.descriptionLoginBottomSheetText.text.toString(),
-                size = file.length(),
-                url = "default"
-            )
-            parentFragment.addRecord(audioNote)
-            uploadRecording(audioNote)
-            dismiss()
+            if (binding.nameLoginBottomSheetText.text!!.isBlank()) {
+                Toast.makeText(requireContext(), "Please enter file name", Toast.LENGTH_SHORT)
+                    .show()
+            } else if (binding.descriptionLoginBottomSheetText.text!!.isBlank()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Please enter file description",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (!binding.play.isEnabled) {
+                Toast.makeText(requireContext(), "Nothing to upload", Toast.LENGTH_SHORT).show()
+            } else if (!isOnline(requireContext())) {
+                Toast.makeText(requireContext(), "Check your connection", Toast.LENGTH_SHORT).show()
+            } else {
+                val location =
+                    getRecordingFilePath(binding.nameLoginBottomSheetText.text.toString())
+
+
+                val file: File = File(location)
+                val audioNote = AudioNote(
+                    path = file.absolutePath,
+                    name = binding.nameLoginBottomSheetText.text.toString(),
+                    description = binding.descriptionLoginBottomSheetText.text.toString(),
+                    size = file.length(),
+                    url = "default"
+                )
+                parentFragment.addRecord(audioNote)
+                uploadRecording(audioNote)
+                dismiss()
+
+                binding.nameLoginBottomSheetText.text!!.clear()
+                binding.descriptionLoginBottomSheetText.text!!.clear()
+                buttonState(binding.record, true)
+                buttonState(binding.stop, false)
+                buttonState(binding.play, false)
+            }
+
         }
-
 
     }
 
@@ -125,6 +179,8 @@ class BottomSheetFragment(fragment: DashboardFragment) :
 
         module = RetrofitModule
         module.initRetrofit(requireContext())
+
+        parentActivity.showProgressDialog()
 
         val file: File = File(audioNote.path)
 
@@ -148,22 +204,24 @@ class BottomSheetFragment(fragment: DashboardFragment) :
                     call: Call<Message>,
                     response: Response<Message>
                 ) {
+                    parentActivity.hideProgressDialog()
+
                     val uploadResponse = response.body()
 
                     if (response.code() == 200) {
                         if (uploadResponse != null) {
-                            Log.i("success: ", uploadResponse.message)
+                            parentActivity.showSnackBar("Upload successful", false)
                             audioNote.url = uploadResponse.message
                         }
 
                     } else {
-                        Log.e("Upload fail", response.errorBody().toString())
+                        parentActivity.showSnackBar("Upload failed", true)
                     }
                 }
 
                 override fun onFailure(call: Call<Message>, t: Throwable) {
-                    Log.e("Communication error", t.message.toString())
-                    Log.i("success: ", "NO")
+                    parentActivity.hideProgressDialog()
+                    parentActivity.showSnackBar("Something went wrong", true)
                 }
 
             })
@@ -171,31 +229,37 @@ class BottomSheetFragment(fragment: DashboardFragment) :
     }
 
     private fun buttonState(button: AppCompatButton, enabled: Boolean) {
-        when(button){
+        when (button) {
             binding.record -> {
-                if(enabled){
-                    binding.record.background = binding.record.context.getDrawable(R.drawable.ic_baseline_mic_24)
+                if (enabled) {
+                    binding.record.background =
+                        binding.record.context.getDrawable(R.drawable.ic_baseline_mic_24)
                     binding.record.isEnabled = true
                 } else {
-                    binding.record.background = binding.record.context.getDrawable(R.drawable.ic_baseline_mic_disabled_24)
+                    binding.record.background =
+                        binding.record.context.getDrawable(R.drawable.ic_baseline_mic_disabled_24)
                     binding.record.isEnabled = false
                 }
             }
             binding.stop -> {
-                if(enabled){
-                    binding.stop.background = binding.record.context.getDrawable(R.drawable.ic_baseline_stop_24)
+                if (enabled) {
+                    binding.stop.background =
+                        binding.record.context.getDrawable(R.drawable.ic_baseline_stop_24)
                     binding.stop.isEnabled = true
                 } else {
-                    binding.stop.background = binding.record.context.getDrawable(R.drawable.ic_baseline_stop_disabled_24)
+                    binding.stop.background =
+                        binding.record.context.getDrawable(R.drawable.ic_baseline_stop_disabled_24)
                     binding.stop.isEnabled = false
                 }
             }
             binding.play -> {
-                if(enabled){
-                    binding.play.background = binding.record.context.getDrawable(R.drawable.ic_baseline_play_arrow_24)
+                if (enabled) {
+                    binding.play.background =
+                        binding.record.context.getDrawable(R.drawable.ic_baseline_play_arrow_24)
                     binding.play.isEnabled = true
                 } else {
-                    binding.play.background = binding.record.context.getDrawable(R.drawable.ic_baseline_play_arrow_disabled_24)
+                    binding.play.background =
+                        binding.record.context.getDrawable(R.drawable.ic_baseline_play_arrow_disabled_24)
                     binding.play.isEnabled = false
                 }
             }
@@ -226,15 +290,24 @@ class BottomSheetFragment(fragment: DashboardFragment) :
         return file.path
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == MICROPHONE_PERMISSION_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    return true
+                }
+            }
         }
+        return false
     }
 
 }

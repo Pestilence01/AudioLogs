@@ -1,164 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
-    <TextView
-        android:id="@+id/register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="5dp"
-        android:text="Register"
-        android:textAlignment="center"
-        android:textSize="70sp"
-        android:textStyle="bold" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameRegister"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/white"
-        android:hint="Name"
-        android:textColorHint="@color/defaultGrey"
-        app:boxStrokeColor="@color/magenta"
-        >
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/nameRegisterText"
+        <TextView
+            android:id="@+id/register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="5dp"
+            android:text="Register"
+            android:textAlignment="center"
+            android:textSize="70sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameRegister"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="35"
-            android:textColor="@color/black"
-            android:textColorHint="@color/magenta"
-            android:textSize="16sp"
-            app:boxStrokeColor="@color/magenta" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/white"
+            android:hint="Name"
+            android:textColorHint="@color/defaultGrey"
+            app:boxStrokeColor="@color/magenta">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nameRegisterText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="35"
+                android:textColor="@color/black"
+                android:textColorHint="@color/magenta"
+                android:textSize="16sp"
+                app:boxStrokeColor="@color/magenta" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/surnameRegister"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/white"
-        android:hint="Surname"
-        android:textColorHint="@color/defaultGrey"
-        app:boxStrokeColor="@color/magenta"
-        >
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/surnameRegisterText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/surnameRegister"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="35"
-            android:textColor="@color/black"
-            android:textColorHint="@color/magenta"
-            android:textSize="16sp"
-            app:boxStrokeColor="@color/magenta" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/white"
+            android:hint="Surname"
+            android:textColorHint="@color/defaultGrey"
+            app:boxStrokeColor="@color/magenta">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/usernameRegister"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/white"
-        android:hint="Username"
-        android:textColorHint="@color/defaultGrey"
-        app:boxStrokeColor="@color/magenta"
-        >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/surnameRegisterText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="35"
+                android:textColor="@color/black"
+                android:textColorHint="@color/magenta"
+                android:textSize="16sp"
+                app:boxStrokeColor="@color/magenta" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/usernameRegisterText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/usernameRegister"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="35"
-            android:textColor="@color/black"
-            android:textColorHint="@color/magenta"
-            android:textSize="16sp"
-            app:boxStrokeColor="@color/magenta" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/white"
+            android:hint="Username"
+            android:textColorHint="@color/defaultGrey"
+            app:boxStrokeColor="@color/magenta">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/passwordRegister"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/white"
-        android:hint="Password"
-        android:textColorHint="@color/defaultGrey"
-        app:boxStrokeColor="@color/magenta"
-        >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/usernameRegisterText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="35"
+                android:textColor="@color/black"
+                android:textColorHint="@color/magenta"
+                android:textSize="16sp"
+                app:boxStrokeColor="@color/magenta" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/passwordRegisterText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordRegister"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="35"
-            android:textColor="@color/black"
-            android:textColorHint="@color/magenta"
-            android:textSize="16sp"
-            android:inputType="textPassword"
-            app:boxStrokeColor="@color/magenta" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/white"
+            android:hint="Password"
+            android:textColorHint="@color/defaultGrey"
+            app:boxStrokeColor="@color/magenta">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailRegister"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/white"
-        android:hint="Email"
-        android:textColorHint="@color/defaultGrey"
-        app:boxStrokeColor="@color/magenta"
-        >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordRegisterText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:maxLength="35"
+                android:textColor="@color/black"
+                android:textColorHint="@color/magenta"
+                android:textSize="16sp"
+                app:boxStrokeColor="@color/magenta" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailRegisterText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailRegister"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="35"
-            android:textColor="@color/black"
-            android:textColorHint="@color/magenta"
-            android:textSize="16sp"
-            app:boxStrokeColor="@color/magenta" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/white"
+            android:hint="Email"
+            android:textColorHint="@color/defaultGrey"
+            app:boxStrokeColor="@color/magenta">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailRegisterText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="35"
+                android:textColor="@color/black"
+                android:textColorHint="@color/magenta"
+                android:textSize="16sp"
+                app:boxStrokeColor="@color/magenta" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/button_style"
-        android:text="Register"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/button_style"
+            android:text="Register"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="32dp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Already have an account?"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/buttonLogin"
+                android:text="@string/login_text"
+                android:textColor="@color/magenta"
+                android:layout_marginStart="4dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
-</LinearLayout>
+</ScrollView>

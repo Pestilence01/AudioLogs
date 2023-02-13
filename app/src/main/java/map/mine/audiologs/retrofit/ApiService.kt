@@ -2,10 +2,8 @@ package map.mine.audiologs.retrofit
 
 import map.mine.audiologs.models.User
 import map.mine.audiologs.retrofit.requests.AuthenticateRequest
-import map.mine.audiologs.retrofit.requests.RegisterUserRequest
 import map.mine.audiologs.retrofit.responses.AudioNotesResponse
 import map.mine.audiologs.retrofit.responses.AuthenticateResponse
-import map.mine.audiologs.retrofit.responses.RegisterUserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody

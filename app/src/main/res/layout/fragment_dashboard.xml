@@ -23,10 +23,11 @@
             app:layout_scrollFlags="scroll|enterAlways" />
 
     </com.google.android.material.appbar.AppBarLayout>
-    
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"

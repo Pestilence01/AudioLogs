@@ -19,7 +19,9 @@ object RetrofitModule {
             .build()
 
         retrofit = Retrofit.Builder().baseUrl(BASE_URL)
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(Json {
+                ignoreUnknownKeys = true
+            }.asConverterFactory("application/json".toMediaType()))
             .client(okhttp)
             .build()
             .create(ApiService::class.java)

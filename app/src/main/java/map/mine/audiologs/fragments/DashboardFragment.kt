@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import map.mine.audiologs.R
+import map.mine.audiologs.activities.MainActivity
 import map.mine.audiologs.models.AudioNote
 import map.mine.audiologs.adapters.RecordsAdapter
 import map.mine.audiologs.databinding.FragmentDashboardBinding
@@ -48,6 +50,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
     private lateinit var saveDir: File
 
+    private lateinit var parentActivity: MainActivity
+
     private var mediaPlayer = MediaPlayer()
 
 
@@ -60,9 +64,10 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        parentActivity = activity as MainActivity
 
         sessionManager = SessionManager(requireContext())
 
@@ -81,18 +86,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             )
         )
 
+
         val bottomSheetFragment = BottomSheetFragment(this)
 
         binding.recordLog.setOnClickListener {
             bottomSheetFragment.show(requireActivity().supportFragmentManager, "dsa")
         }
-
-        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                requireActivity().finish()
-            }
-
-        })
 
     }
 
@@ -107,6 +106,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         module = RetrofitModule
         module.initRetrofit(requireContext())
 
+        parentActivity.showProgressDialog()
+
         module.retrofit.getUserAudioNotes(token = "Bearer ${sessionManager.fetchAuthToken()}")
             .enqueue(object : Callback<List<AudioNotesResponse>> {
                 override fun onResponse(
@@ -115,23 +116,22 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
                 ) {
                     val loginResponse = response.body()
 
+                    parentActivity.hideProgressDialog()
+
                     if (response.code() == 200) {
-                        Log.i("success: ", "YES")
                         var test: String = String()
                         for (element in loginResponse!!) {
                             fetchAndStoreFile(element!!)
                         }
 
-                        Log.i("Test", test)
-
                     } else {
-                        Log.e("Login failed", response.errorBody().toString())
+                        parentActivity.showSnackBar("Something went wrong", true)
                     }
                 }
 
                 override fun onFailure(call: Call<List<AudioNotesResponse>>, t: Throwable) {
-                    Log.e("Communication error", t.message.toString())
-                    Log.i("success: ", "NO")
+                    parentActivity.hideProgressDialog()
+                    parentActivity.showSnackBar("Something went wrong", true)
                 }
 
             })
@@ -140,7 +140,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     private fun fetchAndStoreFile(element: AudioNotesResponse) {
 
         var urlSplitted = element.url!!.split("/")
-        var lastElement = urlSplitted[urlSplitted.size-1]
+        var lastElement = urlSplitted[urlSplitted.size - 1]
 
         module.retrofit.getAudioNote(
             token = "Bearer ${sessionManager.fetchAuthToken()}",
@@ -167,7 +167,10 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
                 audioNoteList.add(audioNote)
 
+                binding.recyclerView.visibility = View.VISIBLE
+
                 adapter.notifyDataSetChanged()
+
 
             }
 
@@ -181,10 +184,11 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     fun addRecord(audioNote: AudioNote) {
         audioNoteList.add(audioNote)
         recyclerView.adapter!!.notifyDataSetChanged()
+
     }
 
     fun playRecording(audioNote: AudioNote) {
-        if(mediaPlayer.isPlaying) {
+        if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
         }
         mediaPlayer = MediaPlayer()
@@ -200,23 +204,31 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_baseline_logout_24)
         toolbar.setNavigationOnClickListener {
-            deleteTokenAndData()
-            Navigation.findNavController(requireView())
-                .navigate(R.id.action_dashboardFragment_to_loginFragment2)
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Do you wish to log out?").setCancelable(true)
+                .setPositiveButton("Yes") { _, _ ->
+                    deleteTokenAndData()
+                    Navigation.findNavController(requireView())
+                        .navigate(R.id.action_dashboardFragment_to_loginFragment2)
+                }.setNegativeButton("No") { _, _ ->
+
+                }.show()
         }
     }
 
     private fun deleteTokenAndData() {
-        if(mediaPlayer.isPlaying) {
+        if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
         }
 
-        audioNoteList.forEach{
+        audioNoteList.forEach {
             File(it.path).delete()
         }
         audioNoteList.clear()
         adapter.notifyDataSetChanged()
         sessionManager.shutdown()
+
     }
 
     override fun onStop() {
@@ -226,41 +238,57 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
 
     fun deleteRecording(item: AudioNote) {
-        module = RetrofitModule
-        module.initRetrofit(requireContext())
 
-        val splitted = item.url.split("/")
-        val fileId = splitted[splitted.size-1]
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Are you sure you with to delete this recording?").setCancelable(true)
+            .setPositiveButton("Yes") { _, _ ->
+                parentActivity.showProgressDialog()
 
-        module.retrofit.deleteAudioNote(token = "Bearer ${sessionManager.fetchAuthToken()}", fileId)
-            .enqueue(object : Callback<Message> {
-                override fun onResponse(
-                    call: Call<Message>,
-                    response: Response<Message>
-                ) {
-                    val responseMessage = response.body()
+                module = RetrofitModule
+                module.initRetrofit(requireContext())
 
-                    if (response.code() == 200) {
-                        if (responseMessage != null) {
-                            Log.i("success: ", responseMessage.message)
+                val splitted = item.url.split("/")
+                val fileId = splitted[splitted.size - 1]
+
+                module.retrofit.deleteAudioNote(
+                    token = "Bearer ${sessionManager.fetchAuthToken()}",
+                    fileId
+                )
+                    .enqueue(object : Callback<Message> {
+                        override fun onResponse(
+                            call: Call<Message>,
+                            response: Response<Message>
+                        ) {
+                            val responseMessage = response.body()
+
+                            parentActivity.hideProgressDialog()
+
+                            if (response.code() == 200) {
+                                if (responseMessage != null) {
+                                    parentActivity.showSnackBar("Delete successful", false)
+                                }
+                                deleteLocally(item)
+
+                            } else {
+                                parentActivity.showSnackBar("Delete failed", true)
+                            }
                         }
-                        deleteLocally(item)
 
-                    } else {
-                        Log.e("Delete failed", response.errorBody().toString())
-                    }
-                }
+                        override fun onFailure(call: Call<Message>, t: Throwable) {
+                            parentActivity.hideProgressDialog()
+                            parentActivity.showSnackBar("Something went wrong", true)
+                        }
 
-                override fun onFailure(call: Call<Message>, t: Throwable) {
-                    Log.e("Communication error", t.message.toString())
-                    Log.i("success: ", "NO")
-                }
+                    })
+            }.setNegativeButton("No") { _, _ ->
 
-            })
+            }.show()
+
     }
 
     private fun deleteLocally(item: AudioNote) {
         audioNoteList.remove(item)
         adapter.notifyDataSetChanged()
+
     }
 }

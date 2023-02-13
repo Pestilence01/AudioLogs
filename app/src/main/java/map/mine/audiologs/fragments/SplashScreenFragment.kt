@@ -1,5 +1,6 @@
 package map.mine.audiologs.fragments
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import androidx.fragment.app.Fragment
@@ -27,11 +28,17 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val typeface: Typeface =
+            Typeface.createFromAsset(requireContext().assets, "Happy & Balloons.ttf")
+
+        binding.name.typeface = typeface
+        binding.contributions.typeface = typeface
+
         Handler().postDelayed({
-            Navigation.findNavController(view).navigate(R.id.action_splashScreenFragment_to_loginFragment)
+            Navigation.findNavController(view)
+                .navigate(R.id.action_splashScreenFragment_to_loginFragment)
         }, 3000)
     }
-
 
 
 }

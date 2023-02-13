@@ -14,11 +14,12 @@
         android:layout_margin="16dp"/>
 
     <TextView
+        android:id="@+id/addNote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add new record"
         android:textStyle="bold"
-        android:textSize="24sp"
+        android:textSize="56sp"
         android:layout_marginTop="-16dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"/>
