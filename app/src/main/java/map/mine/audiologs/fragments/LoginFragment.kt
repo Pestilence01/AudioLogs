@@ -2,7 +2,6 @@ package map.mine.audiologs.fragments
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import map.mine.audiologs.databinding.FragmentLoginBinding
 import map.mine.audiologs.retrofit.RetrofitModule
 import map.mine.audiologs.retrofit.SessionManager
 import map.mine.audiologs.retrofit.requests.AuthenticateRequest
-import map.mine.audiologs.retrofit.requests.RegisterUserRequest
 import map.mine.audiologs.retrofit.responses.AuthenticateResponse
 import retrofit2.Call
 import retrofit2.Callback

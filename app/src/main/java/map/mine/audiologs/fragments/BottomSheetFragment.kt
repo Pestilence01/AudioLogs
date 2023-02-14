@@ -12,7 +12,6 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
-import androidx.core.net.toUri
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import map.mine.audiologs.R
 import map.mine.audiologs.activities.MainActivity
@@ -29,7 +27,6 @@ import map.mine.audiologs.databinding.BottomsheetFragmentBinding
 import map.mine.audiologs.retrofit.Message
 import map.mine.audiologs.retrofit.RetrofitModule
 import map.mine.audiologs.retrofit.SessionManager
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
